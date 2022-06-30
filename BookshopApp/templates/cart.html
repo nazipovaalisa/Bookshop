@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h3 class="text-center mt-5 mb-5">Вашa корзина {% if not cart.products.count %}пуста{% endif %}</h3>
+    {% if cart.books.count %}
+        <table class="table text-center">
+        <thead>
+            <tr>
+                <th scope="col">Название книги</th>
+                <th scope="col">Изображение</th>
+                <th scope="col">Цена</th>
+                <th scope="col">Кол-во</th>
+                <th scope="col">Общая цена</th>
+                <th scope="col">Действие</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for item in cart.books.all %}
+            <tr>
+            <th scope="row">{{ item.book.name }}</th>
+                        <td class="w-25"><img src="{{ item.book.image.url }}" class="img-fluid"></td>
+                        <td>{{ item.book.price }} руб.</td>
+                        <td align="center">
+                            {% if item.qty == 1 %}
+                             <a href="{% url 'delete_from_cart' book_slug=item.book.slug%}"><i class="bi bi-dash-square-fill" style="font-size: 1.5rem; color: #18a3dd;"></i></a>
+                            {% else %}
+                            <a href="{% url 'change_gty' book_slug=item.book.slug type=2 %}" title="Уменьшить"><i class="bi bi-dash-square-fill" style="font-size: 1.5rem; color: #18a3dd;"></i></a>
+                            {% endif %}
+                             {{ item.qty }}
+                            <a href="{% url 'change_gty' book_slug=item.book.slug type=1 %}" title="Увеличить"><i class="bi bi-plus-square-fill" style="font-size: 1.5rem; color: #18a3dd;"></i></a>
+
+
+                        </td>
+                        <td>{{ item.final_price }} руб.</td>
+                        <td>
+                            <a href="{% url 'delete_from_cart' book_slug=item.book.slug %}" title="Удалить" class="btn btn-danger">
+                                <i class="bi bi-x-circle-fill"></i> Удалить
+                            </a>
+                        </td>
+
+            </tr>
+        {% endfor %}
+        </tbody>
+        <tfoot>
+        <tr>
+            <td colspan="2"></td>
+                    <td>Итого:</td>
+                    <td>{{ cart.total_products }}</td>
+                    <td><strong>{{ cart.final_price }} руб.</strong></td>
+                    <td><a href="{% url 'checkout' %}"><button class="btn btn-secondary">Перейти к оформлению</button></a></td>
+        </tr>
+        </tfoot>
+        </table>
+    {% endif %}
+{% endblock content%}

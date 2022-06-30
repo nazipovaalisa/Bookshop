@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% block content %}
+    <br>
+<h4 class="text-center">Привет, {{ request.user.first_name }}</h4>
+
+    <div class="col-12">
+
+    <table class="table">
+        <thead>
+        <tr>
+            <th scope="col">Номер заказа</th>
+            <th scope="col">Статус</th>
+            <th scope="col">Сумма</th>
+            <th scope="col">Книги</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for order in customer.orders.all %}
+            <tr>
+                <th scope="row">{{ order.id }}</th>
+                <td>{{ order.get_status_display }}</td>
+                <td>{{ order.cart.final_price }} руб.</td>
+                <td>
+                    {% for item in order.cart.books.all %}
+                        <p>{{ item.book.name }} | {{ item.book.price }} руб. | {{ item.qty }} шт. - {{ item.final_price }} руб</p>
+                        {% endfor %}
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    </div>
+{% endblock content %}

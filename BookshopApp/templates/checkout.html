@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+
+    <h3 class="text-center mt-5 mb-5">Оформление заказа</h3>
+    {% if messages %}
+        {% for message in messages %}
+
+            <div class="alert alert-danger fade show" role="alert">
+                <strong>{{ message }}</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endfor %}
+
+    {% endif %}
+    <div class="col-md-12" align="center">
+    <table class="table text-center" border="1">
+        <thead>
+            <tr>
+                <th scope="col">Книга</th>
+                <th scope="col">Цена</th>
+                <th scope="col">Кол-во</th>
+                <th scope="col">Общая цена</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for item in cart.books.all %}
+            <tr>
+            <th scope="row">{{ item.book.name }}</th>
+                        <td>{{ item.book.price }} руб.</td>
+                <td>{{ item.qty }}</td>
+                        <td>{{ item.final_price }} руб.</td>
+
+            </tr>
+        {% endfor %}
+        </tbody>
+        <tfoot>
+        <tr>
+            <td></td>
+                    <td>Итого:</td>
+                    <td>{{ cart.total_products }}</td>
+                    <td><strong>{{ cart.final_price }} руб.</strong></td>
+        </tr>
+        </tfoot>
+        </table>
+    </div>
+    <div class="col-md-6">
+    <h4 class="text-center">Данные заказа</h4>
+        <form action="{% url 'make-order' %}" method="POST">
+            {% csrf_token %}
+            {{ form|crispy }}
+            <input type="submit" class="btn btn-primary btn-block mb-3" value="Оформить заказ">
+        </form>
+    </div>
+{% endblock content %}
